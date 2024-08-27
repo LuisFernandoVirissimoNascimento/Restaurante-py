@@ -1,12 +1,16 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 # https://www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
 
 # O desafio consiste em criar uma (ou mais telas) para um sistemas de pedido do restaurante do Ederson.
 # Para começar o sistema, é solicitado que ele digite um usuário e uma senha, a senha deve ser confirmada em um campo com confirmação de senha e deve seguir as mesmas normas do exercício anterior.
 # Depois do login deve ser possível ao usuário entrar na tela inicial onde ele pode começar o processo para fazer seus pedidos, na tela inicial deve conter a mensagem "Olá, {nome_usuário}" e abaixo as opções do restaurante, as opções possíveis são: entradas, pratos principais, bebidas, bebidas alcoólicas, sobremesas, menu do chef.
-# Cada botão que a pessoa clicar deve redirecionar a tela para o campo com opções variadas de produtos (no mínimo 5) para ser selecionada pelo usuário, a pessoa pode adicionar tudo no pedido dela clicando em um botão para adicionar ao pedido (use a criatividade para criar esse botão) e ao final da tela deve ter a opção de finalizar o pedido para que a pessoa possa visualizar tudo o que foi colocado no carrinho até agora e confirme se está tudo certo, caso esteja ela envia o pedido a cozinha, e finaliza o sistema com uma imagem divertida, caso não ela deve ter a opção de acrescentar mais itens ao pedido ou retirar os mesmos que já estejam lá.
+# Cada botão que a pessoa clicar deve redirecionar a tela para o campo com opções variadas de produtos (no mínimo 5) para ser selecionada pelo usuário, a pessoa pode adicionar tudo no pedido dela clicando em um botão para adicionar ao pedido (use a criatividade para criar esse botão) e ao final da tela deve ter a opção de finalizar o pedido para que a pessoa possa visualizar tudo o que foi colocado no carrinho até agora e confirme se está tudo certo, caso esteja ela envia o pedido a cozinha, e finaliza o sistema com uma imagem divertida, 
+
+# caso não ela deve ter a opção de acrescentar mais itens ao pedido ou retirar os mesmos que já estejam lá.
 
 LARGEFONT =("Verdana", 35)
 entryFont =("Verdana", 25)
@@ -18,7 +22,7 @@ class tkinterApp(tk.Tk):
 		tk.Tk.__init__(self, *args, **kwargs)
 		
 		container = tk.Frame(self,background='#1e272e') 
-		self.geometry("800x600")
+		self.geometry("1000x800")
 		container.pack(side = "top", fill = "both", expand = True) 
 
 		container.grid_rowconfigure(0, weight = 1)
@@ -26,7 +30,7 @@ class tkinterApp(tk.Tk):
 
 		self.frames = {} 
 
-		for F in (StartPage, Page1, Page2):
+		for F in (StartPage, Buy, PaginaPrincipal, Entradas, PratosPrincipais, Bebidas, BebidasAlcoolicas, MenuDoChef, Sobremesas):
 
 			frame = F(container, self)
 			self.frames[F] = frame 
@@ -70,7 +74,7 @@ class tkinterApp(tk.Tk):
 			return
 					
 		
-		tkinterApp.show_frame(self,Page1)
+		tkinterApp.show_frame(self,PaginaPrincipal)
 
 class StartPage(tk.Frame):
 	def __init__(self, parent, controller): 
@@ -105,7 +109,7 @@ class StartPage(tk.Frame):
 
 
 # second window frame page1 
-class Page1(tk.Frame):
+class Buy(tk.Frame):
 	
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent,background='#1e272e')
@@ -114,18 +118,102 @@ class Page1(tk.Frame):
 		titulo.pack(anchor='center')
 
 		button1 = ttk.Button(self, text ="Page 1",
-		command = lambda : controller.show_frame(Page1))	
+		command = lambda : controller.show_frame(Buy))	
 		button1.pack(anchor='center')
 
 		button2 = ttk.Button(self, text ="Page 2",
-		command = lambda : controller.show_frame(Page2))	
+		command = lambda : controller.show_frame(PaginaPrincipal))	
 		button2.pack(anchor='center')
 
 
 
 
 # third window frame page2
-class Page2(tk.Frame): 
+class PaginaPrincipal(tk.Frame): 
+	def __init__(self, parent, controller):
+		self.image_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Imagens") # Caminho atual de aonde as imagens estão.
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		
+		comidas = tk.Frame(self,background='gray')
+		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 590)
+
+		#Entradas
+		image_path = os.path.join(self.image_folder, "cuzcuzPaulistaEntradaThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgEntradas = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgEntradas.image = photo
+		imgEntradas.grid(row=0,column=0)
+		btEntradas = ttk.Button(comidas, text ="Entradas",
+		command = lambda : controller.show_frame(Entradas))
+		btEntradas.grid(row=1,column=0)
+
+		#Pratos principais
+		image_path = os.path.join(self.image_folder, "harkarlPratosPrincipaisThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgPratosPrincipais = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgPratosPrincipais.image = photo
+		imgPratosPrincipais.grid(row=0,column=1)
+		btPratosPrincipais = ttk.Button(comidas, text ="Pratos Principais",
+		command = lambda : controller.show_frame(PratosPrincipais))
+		btPratosPrincipais.grid(row=1,column=1)
+		
+		#Bebibas
+		image_path = os.path.join(self.image_folder, "tomatoJuiceBebidasThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgBebibas = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgBebibas.image = photo
+		imgBebibas.grid(row=0,column=2)
+		btBebidas = ttk.Button(comidas, text ="Bebidas",
+		command = lambda : controller.show_frame(Bebidas))
+		btBebidas.grid(row=1,column=2)
+		
+		#Bebibas Alcoolicas
+		image_path = os.path.join(self.image_folder, "wasabiBebibasAlcoolicasThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgBebibasAlcoolicas = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgBebibasAlcoolicas.image = photo
+		imgBebibasAlcoolicas.grid(row=3,column=0)
+		btBebidasAlcoolicas = ttk.Button(comidas, text ="Bebidas Alcoólicas",
+		command = lambda : controller.show_frame(BebidasAlcoolicas))
+		btBebidasAlcoolicas.grid(row=4,column=0)
+		
+		#Sobremesas
+		image_path = os.path.join(self.image_folder, "doceSobremesasThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgSobremesas = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgSobremesas.image = photo
+		imgSobremesas.grid(row=3,column=1)
+		btSobremesas = ttk.Button(comidas, text ="Sobremesas",
+		command = lambda : controller.show_frame(Sobremesas))
+		btSobremesas.grid(row=4,column=1)
+
+		#Sobremesas
+		image_path = os.path.join(self.image_folder, "chefThumbnail.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgChef = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgChef.image = photo
+		imgChef.grid(row=3,column=2)
+		btChef = ttk.Button(comidas, text ="Menu do Chef",
+		command = lambda : controller.show_frame(MenuDoChef))
+		btChef.grid(row=4,column=2)
+# entradas, pratos principais, bebidas, bebidas alcoólicas, sobremesas, menu do chef. 
+class Entradas(tk.Frame): 
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent,background='#1e272e')
 		
@@ -133,14 +221,93 @@ class Page2(tk.Frame):
 		titulo.pack(anchor='center')
 
 		button1 = ttk.Button(self, text ="Page 1",
-		command = lambda : controller.show_frame(Page1))	
+		command = lambda : controller.show_frame(Buy))	
 		button1.pack(anchor='center')
 
 		button2 = ttk.Button(self, text ="Page 2",
-		command = lambda : controller.show_frame(Page2))	
+		command = lambda : controller.show_frame(PaginaPrincipal))	
+		button2.pack(anchor='center')
+
+class PratosPrincipais(tk.Frame): 
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		button1 = ttk.Button(self, text ="Page 1",
+		command = lambda : controller.show_frame(Buy))	
+		button1.pack(anchor='center')
+
+		button2 = ttk.Button(self, text ="Page 2",
+		command = lambda : controller.show_frame(PaginaPrincipal))	
+		button2.pack(anchor='center')
+
+class Bebidas(tk.Frame): 
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		button1 = ttk.Button(self, text ="Page 1",
+		command = lambda : controller.show_frame(Buy))	
+		button1.pack(anchor='center')
+
+		button2 = ttk.Button(self, text ="Page 2",
+		command = lambda : controller.show_frame(PaginaPrincipal))	
+		button2.pack(anchor='center')
+
+class BebidasAlcoolicas(tk.Frame): 
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		button1 = ttk.Button(self, text ="Page 1",
+		command = lambda : controller.show_frame(Buy))	
+		button1.pack(anchor='center')
+
+		button2 = ttk.Button(self, text ="Page 2",
+		command = lambda : controller.show_frame(PaginaPrincipal))	
+		button2.pack(anchor='center')
+
+class Sobremesas(tk.Frame): 
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		button1 = ttk.Button(self, text ="Page 1",
+		command = lambda : controller.show_frame(Buy))	
+		button1.pack(anchor='center')
+
+		button2 = ttk.Button(self, text ="Page 2",
+		command = lambda : controller.show_frame(PaginaPrincipal))	
+		button2.pack(anchor='center')
+
+class MenuDoChef(tk.Frame): 
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		
+		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+		titulo.pack(anchor='center')
+
+		button1 = ttk.Button(self, text ="Page 1",
+		command = lambda : controller.show_frame(Buy))	
+		button1.pack(anchor='center')
+
+		button2 = ttk.Button(self, text ="Page 2",
+		command = lambda : controller.show_frame(PaginaPrincipal))	
 		button2.pack(anchor='center')
 
 
-# Driver Code
+
+
+
+
+
 app = tkinterApp()
 app.mainloop()
