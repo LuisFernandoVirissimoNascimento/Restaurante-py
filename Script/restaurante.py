@@ -23,6 +23,7 @@ class tkinterApp(tk.Tk):
 		
 		container = tk.Frame(self,background='#1e272e') 
 		self.geometry("1000x800")
+		self.state("zoomed")
 		container.pack(side = "top", fill = "both", expand = True) 
 
 		container.grid_rowconfigure(0, weight = 1)
@@ -138,8 +139,8 @@ class PaginaPrincipal(tk.Frame):
 		titulo.pack(anchor='center')
 
 		
-		comidas = tk.Frame(self,background='gray')
-		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 590)
+		comidas = tk.Frame(self,background='#1e272e')
+		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 580,pady=200)
 
 		#Entradas
 		image_path = os.path.join(self.image_folder, "cuzcuzPaulistaEntradaThumbnail.png")
@@ -160,7 +161,7 @@ class PaginaPrincipal(tk.Frame):
 		photo = ImageTk.PhotoImage(img)
 		imgPratosPrincipais = tk.Label(comidas, image=photo, bg="gray", bd=0)
 		imgPratosPrincipais.image = photo
-		imgPratosPrincipais.grid(row=0,column=1)
+		imgPratosPrincipais.grid(row=0,column=1,padx= 10)
 		btPratosPrincipais = ttk.Button(comidas, text ="Pratos Principais",
 		command = lambda : controller.show_frame(PratosPrincipais))
 		btPratosPrincipais.grid(row=1,column=1)
@@ -196,12 +197,12 @@ class PaginaPrincipal(tk.Frame):
 		photo = ImageTk.PhotoImage(img)
 		imgSobremesas = tk.Label(comidas, image=photo, bg="gray", bd=0)
 		imgSobremesas.image = photo
-		imgSobremesas.grid(row=3,column=1)
+		imgSobremesas.grid(row=3,column=1,padx= 10)
 		btSobremesas = ttk.Button(comidas, text ="Sobremesas",
 		command = lambda : controller.show_frame(Sobremesas))
 		btSobremesas.grid(row=4,column=1)
 
-		#Sobremesas
+		#Menu do chef
 		image_path = os.path.join(self.image_folder, "chefThumbnail.png")
 		img = Image.open(image_path)
 		img.thumbnail((250, 250))
