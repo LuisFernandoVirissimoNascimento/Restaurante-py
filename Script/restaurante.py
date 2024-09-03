@@ -10,71 +10,80 @@ titleEntryFont = ("Verdana", 15)
 
 
 class tkinterApp(tk.Tk):
-    def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-        self.listaComprasNomes = []
-        self.listaComprasPrecos = []
-        self.usuario = ""
-        container = tk.Frame(self, background="#1e272e")
-        self.geometry("1000x800")
-        self.state("zoomed")
-        container.pack(side="top", fill="both", expand=True)
+	def __init__(self, *args, **kwargs):
+		tk.Tk.__init__(self, *args, **kwargs)
+		self.listaComprasNomes = []
+		self.listaComprasPrecos = []
+		self.usuario = ""
+		container = tk.Frame(self, background="#1e272e")
+		self.geometry("1000x800")
+		self.state("zoomed")
+		container.pack(side="top", fill="both", expand=True)
 
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+		container.grid_rowconfigure(0, weight=1)
+		container.grid_columnconfigure(0, weight=1)
 
-        self.frames = {}
+		self.frames = {}
 
         # Add all frames to the application
-        for F in (StartPage, Buy, PaginaPrincipal, Entradas, PratosPrincipais, Bebidas, BebidasAlcoolicas, MenuDoChef, Sobremesas):
-            frame = F(container, self)
-            self.frames[F] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+		for F in (StartPage, Buy, PaginaPrincipal, Entradas, PratosPrincipais, Bebidas, BebidasAlcoolicas, MenuDoChef, Sobremesas):
+			frame = F(container, self)
+			self.frames[F] = frame
+			frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(StartPage)
-
-    def show_frame(self, cont):
-        frame = self.frames[cont]
+		self.show_frame(StartPage)
+	def getCount(self):
+		inter = len(self.listaComprasNomes)
+		return inter
+	def clearPurchases(self):
+		self.listaComprasNomes.clear()
+		self.listaComprasPrecos.clear()			
+	def show_frame(self, cont):
+		frame = self.frames[cont]
 
         # Check if the frame is PaginaPrincipal and call update_user_label method
-        if cont == PaginaPrincipal:
-            frame.update_user_label()
+		if cont == PaginaPrincipal:
+			frame.update_user_label()
+		if cont == Buy:
+			frame.fuck(self)
+		frame.tkraise()
 
-        frame.tkraise()
+	def getUser(self):
+		return self.usuario
+	
+	def getItem(self, item):
+		return self.listaComprasNomes[item]
 
-    def getUser(self):
-        return self.usuario
+	def buyItem(self, nome, preco):
+		self.listaComprasNomes.append(nome)
+		self.listaComprasPrecos.append(preco)
 
-    def buyItem(self, nome, preco):
-        self.listaComprasNomes.append(nome)
-        self.listaComprasPrecos.append(preco)
+	def login(self, login, senha, confirmarSenha):
+		loginCheck = login.get()
+		senhaCheck = senha.get()
+		senhaConfirmCheck = confirmarSenha.get()
 
-    def login(self, login, senha, confirmarSenha):
-        loginCheck = login.get()
-        senhaCheck = senha.get()
-        senhaConfirmCheck = confirmarSenha.get()
+		if loginCheck == "":
+			messagebox.showerror("Erro", "Login está vazio")
+			return
 
-        if loginCheck == "":
-            messagebox.showerror("Erro", "Login está vazio")
-            return
+        # if senhaCheck == "":
+        #     messagebox.showerror("Erro", "Senha está vazio")
+        #     return
 
-        if senhaCheck == "":
-            messagebox.showerror("Erro", "Senha está vazio")
-            return
+        # if senhaConfirmCheck != senhaCheck:
+        #     messagebox.showerror("Erro", "Senha não é igual a confirmação de senha")
+        #     return
 
-        if senhaConfirmCheck != senhaCheck:
-            messagebox.showerror("Erro", "Senha não é igual a confirmação de senha")
-            return
-
-        if senhaCheck == loginCheck:
-            messagebox.showerror("Erro", "Login e senha não podem ser os mesmos")
-            return
+        # if senhaCheck == loginCheck:
+        #     messagebox.showerror("Erro", "Login e senha não podem ser os mesmos")
+        #     return
 
         # Set the username after successful login
-        self.usuario = loginCheck
-        print(self.usuario)
+		self.usuario = loginCheck
+		print(self.usuario)
 
-        self.show_frame(PaginaPrincipal)
+		self.show_frame(PaginaPrincipal)
 
 
 class StartPage(tk.Frame):
@@ -108,17 +117,27 @@ class Buy(tk.Frame):
 	
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent,background='#1e272e')
-		
+		pass
+
+
+	def fuck(self,controller):		
+		for yipee in self.winfo_children():
+			yipee.destroy()
 		titulo = ttk.Label(self, text ="Restaurante do Ederson", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
 		titulo.pack(anchor='center')
 
-		button1 = ttk.Button(self, text ="Page 1",
-		command = lambda : controller.show_frame(Buy))	
-		button1.pack(anchor='center')
+		btVoltar = ttk.Button(self, text ="Voltar",
+		command = lambda : controller.show_frame(PaginaPrincipal))
+		btVoltar.pack(anchor='center')
 
-		button2 = ttk.Button(self, text ="Page 2",
-		command = lambda : controller.show_frame(PaginaPrincipal))	
-		button2.pack(anchor='center')
+		btCALIFORNIAGIRLSWEEREIFUCUTKRWHERWE = ttk.Button(self, text ="Deletar Compras",
+		command = lambda : [controller.clearPurchases(),self.fuck(controller)])
+		btCALIFORNIAGIRLSWEEREIFUCUTKRWHERWE.pack(anchor='center')
+		for i in range(controller.getCount()):
+			produto = ttk.Label(self, text =f"{controller.getItem(i)}", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
+			produto.pack(anchor='center')
+
+
 class PaginaPrincipal(tk.Frame):
 	def __init__(self, parent, controller):
 		self.image_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Imagens")  # Caminho atual de aonde as imagens estão.
@@ -128,12 +147,12 @@ class PaginaPrincipal(tk.Frame):
 		titulo = ttk.Label(self, text="Restaurante do Ederson", font=LARGEFONT, anchor="center", justify="center", background="#1e272e", foreground="white")
 		titulo.pack(anchor="center")
 
-			# Create a label for user greeting but don't set text yet
+			
 		self.user_label = ttk.Label(self, text="", font=titleEntryFont, anchor="center", justify="center", background="#1e272e", foreground="white")
 		self.user_label.pack(anchor="center")
 		
 		comidas = tk.Frame(self,background='#1e272e')
-		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 580,pady=200)
+		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 580,pady=100)
 
 		#Entradas
 		image_path = os.path.join(self.image_folder, "cuzcuzPaulistaEntradaThumbnail.png")
@@ -239,7 +258,7 @@ class Entradas(tk.Frame):
 		imgEntradas.image = photo
 		imgEntradas.grid(row=0,column=0)
 		btEntradas = ttk.Button(comidas, text ="Purê de Batata com Blueberry e Torrada",
-		command = lambda : controller.show_frame(Entradas))
+		command = lambda : controller.buyItem("Purê de Batata com Blueberry e Torrada",10))
 		btEntradas.grid(row=1,column=0)
 
 		#Pratos principais
