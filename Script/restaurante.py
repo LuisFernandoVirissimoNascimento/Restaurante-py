@@ -26,7 +26,7 @@ class tkinterApp(tk.Tk):
 		self.frames = {}
 
         # Add all frames to the application
-		for F in (StartPage, Buy, PaginaPrincipal, Entradas, PratosPrincipais, Bebidas, BebidasAlcoolicas, MenuDoChef, Sobremesas):
+		for F in (StartPage, Buy, PaginaPrincipal, Entradas, PratosPrincipais, Bebidas, BebidasAlcoolicas, MenuDoChef, Sobremesas,obg):
 			frame = F(container, self)
 			self.frames[F] = frame
 			frame.grid(row=0, column=0, sticky="nsew")
@@ -67,17 +67,17 @@ class tkinterApp(tk.Tk):
 			messagebox.showerror("Erro", "Login está vazio")
 			return
 
-        # if senhaCheck == "":
-        #     messagebox.showerror("Erro", "Senha está vazio")
-        #     return
+		if senhaCheck == "":
+			messagebox.showerror("Erro", "Senha está vazio")
+			return
 
-        # if senhaConfirmCheck != senhaCheck:
-        #     messagebox.showerror("Erro", "Senha não é igual a confirmação de senha")
-        #     return
+		if senhaConfirmCheck != senhaCheck:
+			messagebox.showerror("Erro", "Senha não é igual a confirmação de senha")
+			return
 
-        # if senhaCheck == loginCheck:
-        #     messagebox.showerror("Erro", "Login e senha não podem ser os mesmos")
-        #     return
+		if senhaCheck == loginCheck:
+			messagebox.showerror("Erro", "Login e senha não podem ser os mesmos")
+			return
 
         # Set the username after successful login
 		self.usuario = loginCheck
@@ -113,6 +113,21 @@ class StartPage(tk.Frame):
         button1.pack(anchor="center", pady=10)
 
 # second window frame page1 
+class obg(tk.Frame):
+	def __init__(self, parent, controller):
+		self.image_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Imagens")  # Caminho atual de aonde as imagens estão.
+		tk.Frame.__init__(self, parent,background='#1e272e')
+		comidas = tk.Frame(self,background='#1e272e')
+		comidas.pack(side = "top", fill = "both", expand = True,anchor='center',padx= 580,pady=100)
+
+		#Entradas
+		image_path = os.path.join(self.image_folder, "happy.png")
+		img = Image.open(image_path)
+		img.thumbnail((250, 250))
+		photo = ImageTk.PhotoImage(img)
+		imgEntradas = tk.Label(comidas, image=photo, bg="gray", bd=0)
+		imgEntradas.image = photo
+		imgEntradas.grid(row=0,column=0)
 class Buy(tk.Frame):
 	
 	def __init__(self, parent, controller):
@@ -133,6 +148,10 @@ class Buy(tk.Frame):
 		btCALIFORNIAGIRLSWEEREIFUCUTKRWHERWE = ttk.Button(self, text ="Deletar Compras",
 		command = lambda : [controller.clearPurchases(),self.fuck(controller)])
 		btCALIFORNIAGIRLSWEEREIFUCUTKRWHERWE.pack(anchor='center')
+
+		btFinalizar = ttk.Button(self, text ="Finalizar",
+		command = lambda : controller.show_frame(obg))
+		btFinalizar.pack(anchor='center')
 		for i in range(controller.getCount()):
 			produto = ttk.Label(self, text =f"{controller.getItem(i)}", font = LARGEFONT,anchor="center",justify='center',background='#1e272e',foreground='white')		
 			produto.pack(anchor='center')
